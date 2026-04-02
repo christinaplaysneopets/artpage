@@ -3,3 +3,7 @@ filestructure.md
 *.psd
 *.tif
 *.tiff
+*.py
+*.claude
+*.vscode
+*.html
