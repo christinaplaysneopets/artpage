@@ -1,0 +1,2 @@
+March 2026
+The background and blobs were rendered and animated using Java-flavored processing. The Chomby was drawn in Adobe Fresco, with the warping + text animation being done in photshop.

@@ -1,0 +1,2 @@
+March 2024
+I accidentally made a functioning game because I wanted better control over the scorchio sprite. This was a huge victim to filesize and my own lack of knowledge of best practices in exporting processing sketches to gifs.
