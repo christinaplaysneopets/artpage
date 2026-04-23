@@ -8,6 +8,7 @@ filestructure.md
 *.vscode
 *.html
 !index.html
+!testpetorganizer.html
 *.txt
 *.md
 everythingpage/scripts/*

@@ -1,0 +1,2842 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Neopets Pet Organizer</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* ── THEMES ─────────────────────────────────────────── */
+    :root {
+      /* Neo Night (default — dark, medium contrast) */
+      --bg: #1a1a2e;
+      --bg-2: #0f0f23;
+      --bg-3: #16213e;
+      --bg-hover: #1c1c3e;
+      --bg-row: #1c1c34;
+      --bg-acc: #1c2848;
+      --bg-legend: #161630;
+      --bg-filter: #1e1545;
+      --border: #4c1d95;
+      --border-2: #2d2d5e;
+      --accent: #4c1d95;
+      --accent-ho: #6d28d9;
+      --glow: #a78bfa;
+      --glow-bg: rgba(167, 139, 250, 0.12);
+      --text: #e0e0e0;
+      --text-2: #9ca3af;
+      --text-3: #6b7280;
+      --text-4: #d1d5db;
+      --text-empty: #374151;
+      --text-icon: rgba(255, 255, 255, 0.45);
+      --green: #065f46;
+      --green-ho: #047857;
+      --danger: #7f1d1d;
+      --danger-ho: #991b1b;
+      --red: #ef4444;
+      --red-bg: rgba(239, 68, 68, 0.07);
+      --red-text: #f87171;
+      --saved: #34d399;
+      --unsaved: #f59e0b;
+      --shadow-card: rgba(0, 0, 0, 0.5);
+      --shadow-pop: rgba(0, 0, 0, 0.6);
+      --backdrop: rgba(0, 0, 0, 0.7);
+      --badge-bg: rgba(0, 0, 0, 0.3);
+      --badge-text: #e0e0e0;
+    }
+
+    /* Dracula — dark, high contrast */
+    [data-theme="dracula"] {
+      --bg: #282a36;
+      --bg-2: #1e1f29;
+      --bg-3: #282a36;
+      --bg-hover: #3a3c4e;
+      --bg-row: #343644;
+      --bg-acc: #383a50;
+      --bg-legend: #2e303e;
+      --bg-filter: #44475a;
+      --border: #bd93f9;
+      --border-2: #44475a;
+      --accent: #6272a4;
+      --accent-ho: #7d8ec0;
+      --glow: #ff79c6;
+      --glow-bg: rgba(255, 121, 198, 0.12);
+      --text: #f8f8f2;
+      --text-2: #a8aab8;
+      --text-3: #6272a4;
+      --text-4: #f8f8f2;
+      --text-empty: #44475a;
+      --text-icon: rgba(248, 248, 242, 0.45);
+      --green: #1a6640;
+      --green-ho: #228a55;
+      --danger: #8b2020;
+      --danger-ho: #a83030;
+      --red: #ff5555;
+      --red-bg: rgba(255, 85, 85, 0.08);
+      --red-text: #ff5555;
+      --saved: #50fa7b;
+      --unsaved: #f1fa8c;
+      --shadow-card: rgba(0, 0, 0, 0.5);
+      --shadow-pop: rgba(0, 0, 0, 0.6);
+      --backdrop: rgba(0, 0, 0, 0.7);
+      --badge-bg: rgba(0, 0, 0, 0.3);
+      --badge-text: #f8f8f2;
+    }
+
+    /* Atom One — dark, low contrast */
+    [data-theme="atom-one"] {
+      --bg: #282c34;
+      --bg-2: #21252b;
+      --bg-3: #2c313a;
+      --bg-hover: #2c313a;
+      --bg-row: #2d333d;
+      --bg-acc: #313844;
+      --bg-legend: #292e38;
+      --bg-filter: #3e4451;
+      --border: #4d78cc;
+      --border-2: #3e4451;
+      --accent: #3d5a99;
+      --accent-ho: #4d78cc;
+      --glow: #61afef;
+      --glow-bg: rgba(97, 175, 239, 0.12);
+      --text: #abb2bf;
+      --text-2: #828997;
+      --text-3: #5c6370;
+      --text-4: #c8ccd4;
+      --text-empty: #3e4451;
+      --text-icon: rgba(171, 178, 191, 0.45);
+      --green: #1d5c3a;
+      --green-ho: #267a4e;
+      --danger: #712020;
+      --danger-ho: #8f2828;
+      --red: #e06c75;
+      --red-bg: rgba(224, 108, 117, 0.08);
+      --red-text: #e06c75;
+      --saved: #98c379;
+      --unsaved: #e5c07b;
+      --shadow-card: rgba(0, 0, 0, 0.4);
+      --shadow-pop: rgba(0, 0, 0, 0.5);
+      --backdrop: rgba(0, 0, 0, 0.65);
+      --badge-bg: rgba(0, 0, 0, 0.3);
+      --badge-text: #abb2bf;
+    }
+
+    /* Bluloco — light, high contrast */
+    [data-theme="bluloco"] {
+      --bg: #f7f7f7;
+      --bg-2: #ffffff;
+      --bg-3: #eef0f4;
+      --bg-hover: #e4e8f0;
+      --bg-row: #f0f2f8;
+      --bg-acc: #e8edf5;
+      --bg-legend: #e8edf5;
+      --bg-filter: #d8e2f5;
+      --border: #2979ff;
+      --border-2: #c8cdd5;
+      --accent: #2979ff;
+      --accent-ho: #1565c0;
+      --glow: #2060cc;
+      --glow-bg: rgba(41, 121, 255, 0.1);
+      --text: #383a42;
+      --text-2: #717580;
+      --text-3: #a0a4ad;
+      --text-4: #1a1d24;
+      --text-empty: #b0b5bf;
+      --text-icon: rgba(56, 58, 66, 0.5);
+      --green: #1e6e35;
+      --green-ho: #2a8c46;
+      --danger: #b71c1c;
+      --danger-ho: #c62828;
+      --red: #e53935;
+      --red-bg: rgba(229, 57, 53, 0.08);
+      --red-text: #c62828;
+      --saved: #1b7a35;
+      --unsaved: #c45000;
+      --shadow-card: rgba(0, 0, 0, 0.12);
+      --shadow-pop: rgba(0, 0, 0, 0.18);
+      --backdrop: rgba(0, 0, 0, 0.5);
+      --badge-bg: rgba(0, 0, 0, 0.18);
+      --badge-text: #ffffff;
+    }
+
+    /* Pastel — light, low contrast */
+    [data-theme="pastel"] {
+      --bg: #f5f0fc;
+      --bg-2: #fdf8ff;
+      --bg-3: #ece3f8;
+      --bg-hover: #e3d6f4;
+      --bg-row: #ece3f8;
+      --bg-acc: #e5dcf5;
+      --bg-legend: #e5dcf5;
+      --bg-filter: #d8cce8;
+      --border: #b59fdb;
+      --border-2: #ddd0f0;
+      --accent: #9b7fd4;
+      --accent-ho: #7c5eb8;
+      --glow: #6a4aaa;
+      --glow-bg: rgba(155, 127, 212, 0.1);
+      --text: #3a2e56;
+      --text-2: #7a6a99;
+      --text-3: #a898c8;
+      --text-4: #2a2040;
+      --text-empty: #c0b0de;
+      --text-icon: rgba(58, 46, 86, 0.5);
+      --green: #2e5e3a;
+      --green-ho: #3e7a4e;
+      --danger: #8b2040;
+      --danger-ho: #a8284e;
+      --red: #c0446a;
+      --red-bg: rgba(192, 68, 106, 0.08);
+      --red-text: #a03050;
+      --saved: #4a9e5c;
+      --unsaved: #b86a10;
+      --shadow-card: rgba(80, 40, 130, 0.1);
+      --shadow-pop: rgba(80, 40, 130, 0.15);
+      --backdrop: rgba(40, 20, 80, 0.5);
+      --badge-bg: rgba(0, 0, 0, 0.15);
+      --badge-text: #ffffff;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── THEME PICKER ───────────────────────────────────── */
+    .theme-select {
+      background: var(--bg-2);
+      color: var(--text);
+      border: 1px solid var(--border-2);
+      padding: 4px 8px;
+      border-radius: 5px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    .theme-select:hover {
+      border-color: var(--accent);
+    }
+
+    /* ── HEADER ─────────────────────────────────────────── */
+    .app-header {
+      background: var(--bg-2);
+      border-bottom: 2px solid var(--border);
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    h1 {
+      color: var(--glow);
+      font-size: 1.3rem;
+      letter-spacing: 0.5px;
+    }
+
+    .header-right {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 7px;
+      align-items: center;
+    }
+
+    /* ── TABS ───────────────────────────────────────────── */
+    .tabs {
+      display: flex;
+      background: var(--bg-2);
+      border-bottom: 2px solid var(--border-2);
+      padding: 0 24px;
+    }
+
+    .tab-btn {
+      background: none;
+      border: none;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+      padding: 11px 20px;
+      color: var(--text-3);
+      cursor: pointer;
+      font-size: 0.88rem;
+      transition: color 0.2s, border-color 0.2s;
+      border-radius: 0;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-4);
+      background: none;
+    }
+
+    .tab-btn.active {
+      color: var(--glow);
+      border-bottom-color: var(--glow);
+    }
+
+    /* ── SHARED BUTTONS ─────────────────────────────────── */
+    button {
+      background: var(--accent);
+      color: var(--text);
+      border: none;
+      padding: 7px 13px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.82rem;
+      transition: background 0.15s;
+    }
+
+    button:hover {
+      background: var(--accent-ho);
+    }
+
+    .btn-green {
+      background: var(--green);
+    }
+
+    .btn-green:hover {
+      background: var(--green-ho);
+    }
+
+    .btn-icon {
+      background: none;
+      border: none;
+      color: var(--text-icon);
+      padding: 2px 4px;
+      cursor: pointer;
+      font-size: 0.75rem;
+      line-height: 1;
+      transition: color 0.15s;
+    }
+
+    .btn-icon:hover {
+      color: var(--text);
+      background: none;
+    }
+
+    /* ── CONTENT ────────────────────────────────────────── */
+    .content {
+      padding: .1vh 24px 48px;
+    }
+
+    .tab-controls {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 13px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    /* ── EXPORT ─────────────────────────────────────────── */
+    #export-output {
+      display: none;
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 13px;
+      margin-bottom: 13px;
+      white-space: pre-wrap;
+      font-family: monospace;
+      font-size: 0.78rem;
+      color: var(--glow);
+      max-height: 240px;
+      overflow-y: auto;
+    }
+
+    /* ── LEGEND ─────────────────────────────────────────── */
+    .legend {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+      align-items: center;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.74rem;
+      background: var(--bg-2);
+      padding: 3px 9px;
+      border-radius: 20px;
+      border: 1px solid var(--border-2);
+    }
+
+    .legend-item.filterable {
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+    }
+
+    .legend-item.filterable:hover {
+      border-color: var(--accent-ho);
+      background: var(--bg-legend);
+    }
+
+    .legend-item.filter-active {
+      border-color: var(--glow);
+      background: var(--bg-filter);
+    }
+
+    .legend-divider {
+      width: 1px;
+      height: 16px;
+      background: var(--border-2);
+      margin: 0 2px;
+    }
+
+    .legend-section-label {
+      font-size: 0.65rem;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .color-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .color-dot-btn {
+      cursor: pointer;
+      transition: transform 0.1s, box-shadow 0.1s;
+    }
+
+    .color-dot-btn:hover {
+      transform: scale(1.4);
+      box-shadow: 0 0 0 2px var(--glow);
+    }
+
+    /* ── BOARD ──────────────────────────────────────────── */
+    .board {
+      display: flex;
+      gap: 13px;
+      align-items: flex-start;
+      overflow-x: auto;
+      padding-bottom: 16px;
+    }
+
+    .col {
+      background: var(--bg-3);
+      border: 2px solid var(--border-2);
+      border-radius: 12px;
+      min-width: 193px;
+      width: 193px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      transition: border-color 0.12s, background 0.12s;
+      max-height: calc(100vh - 170px);
+    }
+
+    .col.over {
+      border-color: var(--glow) !important;
+      background: var(--bg-filter);
+    }
+
+    .col.full {
+      border-color: var(--red) !important;
+    }
+
+    .col-account {
+      border-color: var(--border);
+    }
+
+    .col-header.cat-header {
+      cursor: grab;
+      user-select: none;
+    }
+
+    .col-header.cat-header:active {
+      cursor: grabbing;
+    }
+
+    .col.col-reorder-over {
+      outline: 3px dashed var(--glow);
+      outline-offset: -2px;
+    }
+
+    .col-header {
+      padding: 8px 10px;
+      border-radius: 10px 10px 0 0;
+      font-weight: 600;
+      font-size: 0.79rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .col-header-title {
+      word-break: break-all;
+      flex: 1;
+    }
+
+    .col-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      flex-shrink: 0;
+    }
+
+    .count-badge {
+      background: var(--badge-bg);
+      color: var(--badge-text);
+      border-radius: 10px;
+      padding: 1px 7px;
+      font-size: 0.72rem;
+      white-space: nowrap;
+    }
+
+    .count-badge.at-limit {
+      color: var(--red-text);
+    }
+
+    .pet-list {
+      padding: 7px;
+      min-height: 68px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .empty-col {
+      color: var(--text-empty);
+      font-size: 0.7rem;
+      font-style: italic;
+      text-align: center;
+      padding: 10px 6px;
+    }
+
+    /* ── PET CARDS (board) ──────────────────────────────── */
+    .pet-card {
+      background: var(--bg-2);
+      border: 1px solid var(--border-2);
+      border-left: 3px solid #4b5563;
+      border-radius: 8px;
+      padding: 5px 6px 5px 5px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      cursor: grab;
+      user-select: none;
+      transition: transform 0.1s, box-shadow 0.1s, opacity 0.2s;
+    }
+
+    .pet-card:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px var(--shadow-card);
+    }
+
+    .pet-card.dragging {
+      opacity: 0.3;
+      cursor: grabbing;
+    }
+
+    .pet-card img {
+      width: 36px;
+      height: 36px;
+      border-radius: 4px;
+      object-fit: cover;
+      background: var(--bg);
+      flex-shrink: 0;
+    }
+
+    .img-fallback {
+      width: 36px;
+      height: 36px;
+      background: var(--border-2);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.5rem;
+      color: var(--text-3);
+      flex-shrink: 0;
+      text-align: center;
+    }
+
+    .pet-info {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      min-width: 0;
+    }
+
+    .pet-name {
+      font-size: 0.69rem;
+      word-break: break-all;
+      line-height: 1.3;
+    }
+
+    .pet-badge {
+      font-size: 0.59rem;
+      padding: 1px 5px;
+      border-radius: 8px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+      display: inline-block;
+      opacity: 0.95;
+    }
+
+    .drop-indicator {
+      height: 3px;
+      background: var(--glow);
+      border-radius: 2px;
+      display: none;
+      margin: 1px 0;
+    }
+
+    .drop-indicator.visible {
+      display: block;
+    }
+
+    /* ── MATRIX ─────────────────────────────────────────── */
+    .matrix-wrap {
+      overflow: auto;
+      max-height: calc(100vh - 195px);
+      border: 1px solid var(--border-2);
+      border-radius: 10px;
+    }
+
+    .matrix-table {
+      border-collapse: collapse;
+      min-width: max-content;
+    }
+
+    .matrix-table th,
+    .matrix-table td {
+      border: 1px solid var(--border-2);
+      padding: 7px 8px;
+      vertical-align: top;
+    }
+
+    .matrix-table th {
+      background: var(--bg-2);
+      font-size: 0.77rem;
+      white-space: nowrap;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+
+    .matrix-table td:first-child {
+      position: sticky;
+      left: 0;
+      background: var(--bg-3);
+      font-size: 0.77rem;
+      font-weight: 600;
+      white-space: nowrap;
+      z-index: 1;
+      min-width: 130px;
+      border-right: 2px solid var(--border);
+    }
+
+    .matrix-table th:first-child {
+      z-index: 3;
+      border-right: 2px solid var(--border);
+    }
+
+    .mx-acc-info {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .mx-acc-count {
+      font-size: 0.65rem;
+      font-weight: normal;
+      color: var(--text-3);
+    }
+
+    .mx-acc-count.at-limit {
+      color: var(--red-text);
+    }
+
+    .acc-label {
+      display: inline-block;
+      font-size: 0.62rem;
+      font-style: italic;
+      color: var(--text-3);
+      background: rgba(0, 0, 0, 0.18);
+      border-radius: 8px;
+      padding: 1px 6px;
+      margin-top: 1px;
+      cursor: pointer;
+      transition: color 0.15s, background 0.15s;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .acc-label:hover {
+      color: var(--text);
+      background: rgba(0, 0, 0, 0.32);
+    }
+
+    .acc-label-add {
+      font-size: 0.6rem;
+      color: var(--text-3);
+      opacity: 0.45;
+      cursor: pointer;
+      font-style: italic;
+      padding: 1px 4px;
+      border-radius: 6px;
+      transition: opacity 0.15s;
+    }
+
+    .acc-label-add:hover {
+      opacity: 0.85;
+    }
+
+    .mx-cat-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 4px;
+      min-width: 120px;
+    }
+
+    .matrix-cell {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 120px;
+      min-height: 32px;
+      max-height: 260px;
+      overflow-y: auto;
+      border-radius: 5px;
+      padding: 3px;
+      transition: outline 0.1s, background 0.1s;
+    }
+
+    .matrix-cell.mx-over {
+      outline: 2px solid var(--glow);
+      background: var(--glow-bg);
+    }
+
+    .matrix-cell.mx-full {
+      outline: 2px dashed var(--red);
+      background: var(--red-bg);
+    }
+
+    .matrix-pet {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: var(--bg-2);
+      border-radius: 5px;
+      padding: 3px 5px;
+      border: 1px solid var(--border-2);
+      border-left: 3px solid var(--border-2);
+      cursor: grab;
+      user-select: none;
+      transition: opacity 0.2s, background 0.1s;
+    }
+
+    .matrix-pet:hover {
+      background: var(--bg-hover);
+    }
+
+    .matrix-pet.dragging {
+      opacity: 0.25;
+      cursor: grabbing;
+    }
+
+    .matrix-pet.mx-faded {
+      opacity: 0.1;
+    }
+
+    .matrix-pet.mx-highlighted {
+      box-shadow: 0 0 0 2px var(--glow);
+    }
+
+    .mx-cat-header.filter-active-col {
+      background: var(--glow-bg);
+      border-radius: 5px;
+    }
+
+    /* ── MATRIX FILTER BAR ──────────────────────────────── */
+    #matrix-filter-bar {
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .fbar-label {
+      font-size: 0.72rem;
+      color: var(--text-3);
+    }
+
+    .fmode-btn {
+      background: var(--bg-3);
+      color: var(--text-2);
+      border: 1px solid var(--border-2);
+      padding: 2px 11px;
+      border-radius: 10px;
+      font-size: 0.72rem;
+      cursor: pointer;
+      transition: background 0.12s, color 0.12s, border-color 0.12s;
+    }
+
+    .fmode-btn:hover {
+      background: var(--bg-hover);
+      color: var(--text);
+    }
+
+    .fmode-btn.fmode-active {
+      background: var(--accent);
+      color: var(--text);
+      border-color: var(--accent);
+    }
+
+    .fbar-clear {
+      background: none;
+      color: var(--text-3);
+      border: 1px solid var(--border-2);
+      padding: 2px 9px;
+      border-radius: 10px;
+      font-size: 0.72rem;
+      cursor: pointer;
+    }
+
+    .fbar-clear:hover {
+      color: var(--text);
+      border-color: var(--text-3);
+      background: none;
+    }
+
+    /* ── MATRIX TOOLTIP ─────────────────────────────────── */
+    .matrix-tooltip {
+      position: fixed;
+      z-index: 3000;
+      pointer-events: none;
+      background: var(--bg-3);
+      border: 1px solid var(--border-2);
+      border-radius: 7px;
+      padding: 5px 8px;
+      box-shadow: 0 3px 12px var(--shadow-pop);
+      font-size: 0.7rem;
+      max-width: 200px;
+      opacity: 0;
+      transition: opacity 0.1s;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 3px;
+    }
+
+    .matrix-tooltip.tt-show {
+      opacity: 1;
+    }
+
+    .matrix-pet img {
+      width: 26px;
+      height: 26px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+
+    .matrix-pet .img-fallback {
+      width: 26px;
+      height: 26px;
+      font-size: 0.48rem;
+    }
+
+    .matrix-pet .pet-name {
+      font-size: 0.63rem;
+    }
+
+    .matrix-empty {
+      color: var(--text-empty);
+      font-size: 0.7rem;
+      text-align: center;
+      padding: 5px;
+    }
+
+    .matrix-table tbody tr:hover td {
+      background: var(--bg-row);
+    }
+
+    .matrix-table tbody tr:hover td:first-child {
+      background: var(--bg-acc);
+    }
+
+    /* ── TOAST ──────────────────────────────────────────── */
+    #toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--accent);
+      color: var(--text);
+      padding: 8px 18px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s;
+      z-index: 9999;
+    }
+
+    #toast.show {
+      opacity: 1;
+    }
+
+    /* ── TAGS ────────────────────────────────────────────── */
+    .tag-chip {
+      font-size: 0.56rem;
+      padding: 1px 5px;
+      border-radius: 8px;
+      opacity: 0.9;
+      display: inline-block;
+      margin: 1px 1px 0 0;
+      white-space: nowrap;
+    }
+
+    .pet-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0;
+      margin-top: 1px;
+    }
+
+    .tag-popover {
+      position: fixed;
+      z-index: 2000;
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      min-width: 180px;
+      max-width: 240px;
+      box-shadow: 0 8px 32px var(--shadow-pop);
+    }
+
+    .tag-popover h3 {
+      font-size: 0.75rem;
+      color: var(--glow);
+      margin-bottom: 8px;
+    }
+
+    .tag-popover-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-bottom: 8px;
+    }
+
+    .tag-toggle {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      font-size: 0.76rem;
+      padding: 2px 0;
+    }
+
+    .tag-toggle input {
+      cursor: pointer;
+      accent-color: var(--glow);
+    }
+
+    .tag-toggle-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      cursor: pointer;
+      transition: transform 0.1s, box-shadow 0.1s;
+    }
+
+    .tag-toggle-dot:hover {
+      transform: scale(1.4);
+      box-shadow: 0 0 0 2px var(--glow);
+    }
+
+    .tag-popover-new {
+      display: flex;
+      gap: 4px;
+      margin-top: 6px;
+      border-top: 1px solid var(--border-2);
+      padding-top: 8px;
+    }
+
+    .tag-popover-new input[type=text] {
+      flex: 1;
+      background: var(--bg-2);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      padding: 3px 6px;
+      font-size: 0.72rem;
+      outline: none;
+    }
+
+    .tag-popover-new input[type=text]:focus {
+      border-color: var(--glow);
+    }
+
+    .tag-popover-new button {
+      padding: 3px 8px;
+      font-size: 0.72rem;
+    }
+
+    /* ── IMPORT MODAL ────────────────────────────────────── */
+    .import-tabs {
+      display: flex;
+      gap: 0;
+      border-bottom: 2px solid var(--border-2);
+      margin-bottom: 12px;
+    }
+
+    .import-tab {
+      background: none;
+      border: none;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+      padding: 7px 16px;
+      color: var(--text-3);
+      font-size: 0.83rem;
+      cursor: pointer;
+      border-radius: 0;
+      transition: color 0.15s, border-color 0.15s;
+    }
+
+    .import-tab:hover {
+      color: var(--text-4);
+      background: none;
+    }
+
+    .import-tab.active {
+      color: var(--glow);
+      border-bottom-color: var(--glow);
+    }
+
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: var(--backdrop);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--bg-3);
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+      width: 560px;
+      max-width: calc(100vw - 32px);
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .modal h2 {
+      color: var(--glow);
+      font-size: 1rem;
+    }
+
+    .modal p {
+      font-size: 0.78rem;
+      color: var(--text-2);
+      line-height: 1.5;
+    }
+
+    .modal textarea {
+      width: 100%;
+      flex: 1;
+      min-height: 260px;
+      background: var(--bg-2);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px;
+      font-family: monospace;
+      font-size: 0.78rem;
+      resize: vertical;
+      outline: none;
+    }
+
+    .modal textarea:focus {
+      border-color: var(--glow);
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .modal-instructions {
+      width: 620px;
+      overflow-y: auto;
+    }
+    .instr-section { display: flex; flex-direction: column; gap: 5px; }
+    .instr-section h3 {
+      font-size: 0.8rem; color: var(--glow);
+      margin: 0; padding-bottom: 3px;
+      border-bottom: 1px solid var(--border-2);
+    }
+    .instr-section ul {
+      margin: 0; padding-left: 16px;
+      display: flex; flex-direction: column; gap: 3px;
+    }
+    .instr-section li { font-size: 0.76rem; color: var(--text-2); line-height: 1.45; }
+    .instr-section li b { color: var(--text); }
+    .instr-kbd {
+      display: inline-block; font-size: 0.68rem; font-family: monospace;
+      background: var(--bg-2); border: 1px solid var(--border);
+      border-radius: 4px; padding: 0px 5px; color: var(--text-3);
+    }
+    .btn-help {
+      background: none; border: 1px solid var(--border-2);
+      color: var(--text-3); font-size: 0.8rem;
+      padding: 4px 10px; border-radius: 6px;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .btn-help:hover { color: var(--glow); border-color: var(--glow); background: none; }
+
+    .btn-danger {
+      background: var(--danger);
+    }
+
+    .btn-danger:hover {
+      background: var(--danger-ho);
+    }
+
+    .save-indicator {
+      font-size: 0.7rem;
+      color: var(--text-3);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: color 0.3s;
+    }
+
+    .save-indicator.saved {
+      color: var(--saved);
+    }
+
+    .save-indicator.unsaved {
+      color: var(--unsaved);
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="app-header">
+    <h1>Neopets Pet Organizer</h1>
+    <div class="header-right">
+      <div class="header-actions">
+        <button class="btn-help" onclick="showInstructions()">? how to use</button>
+        <span id="file-status" class="save-indicator" style="display:none"></span>
+        <span id="save-indicator" class="save-indicator"></span>
+        <select class="theme-select" id="theme-select" onchange="setTheme(this.value)">
+          <option value="default">Neo Night</option>
+          <option value="dracula">Dracula</option>
+          <option value="atom-one">Atom One</option>
+          <option value="bluloco">Bluloco Light</option>
+          <option value="pastel">Pastel</option>
+        </select>
+        <input type="file" id="file-input" accept=".md,.txt" style="display:none" onchange="handleFileInput(event)">
+        <button onclick="openFile()">Open .md</button>
+        <button onclick="saveFile()">Save Changes</button>
+        <button onclick="showImport()">Paste from markdown/lookup </button>
+        <button id="export-btn" onclick="exportMarkdown()">Export</button>
+        <button onclick="copyExport()">Copy</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="accounts" onclick="switchTab('accounts')">Accounts</button>
+    <button class="tab-btn" data-tab="categories" onclick="switchTab('categories')">Categories</button>
+    <button class="tab-btn" data-tab="matrix" onclick="switchTab('matrix')">Matrix</button>
+  </div>
+
+  <div class="content">
+    <pre id="export-output"></pre>
+
+    <!-- ACCOUNTS TAB -->
+    <div id="tab-accounts" class="tab-panel">
+      <div class="tab-controls">
+        <button class="btn-green" onclick="addAccount()">+ Add Account</button>
+      </div>
+      <div id="accounts-board" class="board"></div>
+    </div>
+
+    <!-- CATEGORIES TAB -->
+    <div id="tab-categories" class="tab-panel" style="display:none">
+      <div class="tab-controls">
+        <button class="btn-green" onclick="addCategory()">+ Add Category</button>
+      </div>
+      <div id="cat-legend" class="legend"></div>
+      <div id="categories-board" class="board"></div>
+    </div>
+
+    <!-- MATRIX TAB -->
+    <div id="tab-matrix" class="tab-panel" style="display:none">
+      <div id="matrix-legend" class="legend"></div>
+      <div id="matrix-filter-bar" style="display:none">
+        <span class="fbar-label">match:</span>
+        <button id="fmode-any" class="fmode-btn fmode-active" onclick="setFilterMode('any')">any</button>
+        <button id="fmode-all" class="fmode-btn" onclick="setFilterMode('all')">all</button>
+        <button class="fbar-clear" onclick="clearMatrixFilter()">clear</button>
+      </div>
+      <div class="matrix-wrap">
+        <div id="matrix-container"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+  <div id="tag-popover" class="tag-popover" style="display:none"></div>
+  <div id="matrix-tooltip" class="matrix-tooltip"></div>
+
+  <!-- IMPORT MODAL -->
+  <div class="modal-backdrop" id="import-modal" onclick="handleBackdropClick(event)">
+    <div class="modal">
+      <h2>Import / Start Fresh</h2>
+
+      <!-- Tab strip -->
+      <div class="import-tabs">
+        <button class="import-tab active" data-itab="text" onclick="switchImportTab('text')">Paste text</button>
+        <button class="import-tab" data-itab="lookup" onclick="switchImportTab('lookup')">From user lookup</button>
+      </div>
+
+      <!-- Text tab -->
+      <div id="itab-text" class="itab-panel">
+        <p>Account name on its own line, then pets as <code style="color:#a78bfa">- petname</code>. Full save format
+          (with <code style="color:#a78bfa">## Categories</code> etc.) also works.</p>
+        <textarea id="import-textarea"
+          placeholder="chrisy_chan&#10;- Tine_chan&#10;- Tuxie_Chan&#10;&#10;cardcaptorcrazzzy&#10;- Blue_Skys&#10;- Hazily"></textarea>
+        <div class="modal-actions">
+          <button class="btn-danger" onclick="startBlank()">Start Blank</button>
+          <button style="background:#065f46" onclick="doImport()">Load</button>
+          <button onclick="hideImport()">Cancel</button>
+        </div>
+      </div>
+
+      <!-- Lookup tab -->
+      <div id="itab-lookup" class="itab-panel" style="display:none">
+        <p>Open a Neopets user lookup in your browser, do <b>View Source</b> (or Ctrl+U), select all, and paste below.
+          The pets will be extracted automatically.</p>
+        <div style="display:flex;gap:8px;margin-bottom:8px;align-items:center;">
+          <label style="font-size:0.78rem;color:#9ca3af;white-space:nowrap">Account name:</label>
+          <input id="lookup-account-name" type="text" placeholder="e.g. chrisy_chan"
+            style="flex:1;background:#0f0f23;color:#e0e0e0;border:1px solid #4c1d95;border-radius:6px;padding:5px 8px;font-size:0.82rem;outline:none;">
+        </div>
+        <textarea id="lookup-textarea" placeholder="Paste full lookup HTML here…" style="min-height:160px"></textarea>
+        <div id="lookup-preview"
+          style="display:none;margin-top:8px;background:#0f0f23;border:1px solid #2d2d5e;border-radius:6px;padding:8px;font-size:0.74rem;font-family:monospace;color:#a78bfa;max-height:100px;overflow-y:auto;">
+        </div>
+        <div class="modal-actions" style="margin-top:10px">
+          <button onclick="previewLookup()">Preview</button>
+          <button style="background:#065f46" onclick="addFromLookup()">Add Account</button>
+          <button onclick="hideImport()">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="instructions-modal" onclick="handleInstructionsBackdrop(event)">
+    <div class="modal modal-instructions">
+      <h2>How to use — Neopets Pet Organizer</h2>
+      <div style="display:flex;flex-direction:column;gap:14px;overflow-y:auto;">
+
+        <div class="instr-section">
+          <h3>Getting started</h3>
+          <ul>
+            <li><b>Open .md</b> — load a previously saved file to pick up where you left off.</li>
+            <li><b>Paste from markdown/lookup</b> — paste a raw markdown block or a Neopets userlookup HTML to import an account's pets.</li>
+            <li>The app opens with example data so you can explore before loading your own.</li>
+          </ul>
+        </div>
+
+        <div class="instr-section">
+          <h3>Accounts</h3>
+          <ul>
+            <li>Each column on the <b>Accounts</b> tab is one Neopets account (max 19 pets).</li>
+            <li><b>Drag</b> pets between account columns to move them.</li>
+            <li>Click the <b>color dot</b> in a column header to change the account's color.</li>
+            <li>Click the small italic <b>label</b> (or <span class="instr-kbd">+ add label</span>) beneath the account name to add a short note like "main" or "spooky side".</li>
+          </ul>
+        </div>
+
+        <div class="instr-section">
+          <h3>Categories</h3>
+          <ul>
+            <li>Switch to the <b>Categories</b> tab to see pets grouped by category.</li>
+            <li><b>Drag</b> pets between category columns to assign or reassign them.</li>
+            <li>Click <b>✏</b> to rename a category; click the <b>color dot</b> in the legend or column header to recolor; click the <b>trash icon</b> to delete.</li>
+            <li>Add a new category with the <b>Add Category</b> button at the bottom of the tab.</li>
+          </ul>
+        </div>
+
+        <div class="instr-section">
+          <h3>Tags</h3>
+          <ul>
+            <li><b>Right-click</b> any pet card to open the tag popover for that pet.</li>
+            <li>Check/uncheck tags to assign them; type a name and press <span class="instr-kbd">+</span> or <span class="instr-kbd">Enter</span> to create a new tag.</li>
+            <li>Click the <b>color dot</b> next to a tag name to change its color.</li>
+            <li>Click the <b>trash icon</b> next to a tag to delete it globally from all pets.</li>
+          </ul>
+        </div>
+
+        <div class="instr-section">
+          <h3>Matrix</h3>
+          <ul>
+            <li>The <b>Matrix</b> tab shows every pet laid out by account (rows) × category (columns).</li>
+            <li><b>Drag</b> pets within the matrix to move them to a different account and/or category at once.</li>
+            <li><b>Hover</b> a pet to see its tags in a tooltip.</li>
+            <li>Click a <b>category or tag chip</b> in the legend above the matrix to highlight matching pets — click multiple to multi-select, and toggle <b>any / all</b> to control how they combine.</li>
+            <li>Click the <b>color dot</b> next to an account name in the matrix to change its color.</li>
+          </ul>
+        </div>
+
+        <div class="instr-section">
+          <h3>Saving &amp; exporting</h3>
+          <ul>
+            <li><b>Save Changes</b> — saves directly back to your open .md file (asks to confirm overwrite or rename if needed).</li>
+            <li><b>Export</b> — shows the markdown text in the panel below the header; you can read it, copy it, or save it manually.</li>
+            <li><b>Copy</b> — copies the markdown straight to clipboard.</li>
+            <li>The app auto-saves after most changes when a file is already open.</li>
+          </ul>
+        </div>
+
+        <div class="instr-section">
+          <h3>File format</h3>
+          <ul>
+            <li>Files are plain <span class="instr-kbd">.md</span> with three sections: <span class="instr-kbd">## Accounts</span>, <span class="instr-kbd">## Categories</span>, <span class="instr-kbd">## Tags</span>.</li>
+            <li>Each section uses <span class="instr-kbd">name | #color</span> headers with <span class="instr-kbd">- petname</span> lines beneath. Accounts also support a third field: <span class="instr-kbd">name | #color | label</span>.</li>
+          </ul>
+        </div>
+
+      </div>
+      <div class="modal-actions">
+        <button onclick="hideInstructions()">Got it</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ================================================================
+    // DATASETS
+    // ================================================================
+    // ── MD parser ────────────────────────────────────────────────
+    const ACC_PALETTE = ['#4c1d95', '#065f46', '#7f1d1d', '#1e3a5f', '#5b1a8a', '#1a4a4a', '#6b2a00', '#1a1a5e'];
+    function defaultAccColor(idx) { return ACC_PALETTE[idx % ACC_PALETTE.length]; }
+
+    function parseMd(text) {
+      const accounts = [];
+      let current = null;
+      for (const raw of text.split('\n')) {
+        const line = raw.trim();
+        if (!line) continue;
+        if (line.startsWith('- ')) {
+          if (current) current.pets.push(line.slice(2).trim());
+        } else {
+          const parts = line.split('|').map(s => s.trim());
+          const [name, color, label] = parts;
+          current = { name, color: color || defaultAccColor(accounts.length), label: label || '', pets: [] };
+          accounts.push(current);
+        }
+      }
+      return accounts;
+    }
+
+    // ================================================================
+    // STATE
+    // ================================================================
+    const MAX_PETS = 19;
+    const TRASH_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="11" height="13" viewBox="0 0 11 13" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M4 1.5h3M1 3.5h9M2 3.5l.8 7.5a.6.6 0 0 0 .6.5h4.2a.6.6 0 0 0 .6-.5L9 3.5"/><line x1="4.2" y1="6" x2="4.2" y2="9.5"/><line x1="5.8" y1="6" x2="5.8" y2="9.5"/></svg>`;
+
+    function defaultState() {
+      return {
+        accounts: [
+          { name: 'example account 1', color: '#4c1d95', label: '', pets: ['example pet 1', 'example pet 2', 'example pet 3'] },
+          { name: 'example account 2', color: '#065f46', label: '', pets: ['example pet 4', 'example pet 5', 'example pet 6'] },
+        ],
+        categoryList: [
+          { name: 'example category 1', color: '#8b5cf6' },
+          { name: 'example category 2', color: '#f59e0b' },
+        ],
+        petCategories: {
+          'example pet 1': 'example category 1',
+          'example pet 2': 'example category 2',
+          'example pet 3': 'example category 1',
+          'example pet 4': 'example category 2',
+          'example pet 5': 'example category 1',
+          'example pet 6': 'example category 2',
+        },
+        tagList: [
+          { name: 'example label 1', color: '#e11d48' },
+          { name: 'example label 2', color: '#06b6d4' },
+        ],
+        petTags: {
+          'example pet 1': ['example label 1'],
+          'example pet 2': ['example label 1', 'example label 2'],
+          'example pet 4': ['example label 2'],
+          'example pet 5': ['example label 1', 'example label 2'],
+          'example pet 6': ['example label 1'],
+        },
+      };
+    }
+
+    function defaultCategories() {
+      return defaultState().categoryList;
+    }
+
+    const _default = defaultState();
+    let accounts     = _default.accounts;
+    let categoryList = _default.categoryList;
+    let petCategories = _default.petCategories; // { petName: categoryName }
+    let tagList       = _default.tagList;        // [{ name, color }]
+    let petTags       = _default.petTags;        // { petName: [tagName, ...] }
+
+    const UNCATEGORIZED = { name: '(uncategorized)', color: '#4b5563' };
+
+    let currentTab = 'accounts';
+    let dragState = null;
+
+    // ================================================================
+    // HELPERS
+    // ================================================================
+    function contrastColor(hex) {
+      if (!hex || hex.length < 7) return '#ffffff';
+      const r = parseInt(hex.slice(1, 3), 16);
+      const g = parseInt(hex.slice(3, 5), 16);
+      const b = parseInt(hex.slice(5, 7), 16);
+      return (0.299 * r + 0.587 * g + 0.114 * b) / 255 > 0.55 ? '#1a1a2e' : '#ffffff';
+    }
+
+    const petImageUrl = n => `https://pets.neopets.com/cpn/${n}/1/2.png`;
+    function getCat(p) { return petCategories[p] || null; }
+    function getCatMeta(name) {
+      if (!name) return UNCATEGORIZED;
+      return categoryList.find(c => c.name === name) || UNCATEGORIZED;
+    }
+    function allPets() { return accounts.flatMap(a => a.pets); }
+    function getPetAccount(petName) { return accounts.find(a => a.pets.includes(petName)) || null; }
+
+    function getDragAfterElement(container, y) {
+      const cards = [...container.querySelectorAll('.pet-card:not(.dragging)')];
+      return cards.reduce((closest, child) => {
+        const box = child.getBoundingClientRect();
+        const offset = y - box.top - box.height / 2;
+        if (offset < 0 && offset > closest.offset) return { offset, element: child };
+        return closest;
+      }, { offset: Number.NEGATIVE_INFINITY }).element;
+    }
+
+    function toast(msg) {
+      const el = document.getElementById('toast');
+      el.textContent = msg;
+      el.classList.add('show');
+      clearTimeout(toast._t);
+      toast._t = setTimeout(() => el.classList.remove('show'), 2000);
+    }
+
+    // ================================================================
+    // TAB SWITCHING
+    // ================================================================
+    function switchTab(tab) {
+      if (tab !== 'matrix') clearMatrixFilter();
+      currentTab = tab;
+      document.querySelectorAll('.tab-panel').forEach(p => p.style.display = 'none');
+      document.getElementById(`tab-${tab}`).style.display = '';
+      document.querySelectorAll('.tab-btn').forEach(b =>
+        b.classList.toggle('active', b.dataset.tab === tab)
+      );
+      render();
+    }
+
+    // ================================================================
+    // FILE I/O
+    // ================================================================
+    let fileHandle = null;
+    let currentFileName = null;
+
+    // ── Parse full save format ─────────────────────────────────
+    function parseFullFormat(text) {
+      // Split into named sections on ## headings
+      const sections = {};
+      let currentSection = 'accounts';
+      sections[currentSection] = [];
+      for (const line of text.split('\n')) {
+        const hd = line.match(/^##\s+(.+)/);
+        if (hd) {
+          currentSection = hd[1].trim().toLowerCase();
+          sections[currentSection] = [];
+        } else {
+          (sections[currentSection] = sections[currentSection] || []).push(line);
+        }
+      }
+
+      const newAccounts = parseMd((sections['accounts'] || []).join('\n'));
+
+      // Categories: "name | #color" header then "- petname" lines
+      let newCategoryList = [];
+      let newPetCategories = {};
+      if (sections['categories']) {
+        let curCat = null;
+        for (const raw of sections['categories']) {
+          const line = raw.trim();
+          if (!line) continue;
+          if (line.startsWith('- ')) {
+            if (curCat) newPetCategories[line.slice(2).trim()] = curCat;
+          } else {
+            const [name, color] = line.split('|').map(s => s.trim());
+            curCat = name;
+            newCategoryList.push({ name, color: color || '#6b7280' });
+          }
+        }
+      }
+      if (!newCategoryList.length) newCategoryList = defaultCategories();
+
+      // Tags: "name | #color" header then "- petname" lines
+      let newTagList = [];
+      let newPetTags = {};
+      if (sections['tags']) {
+        let curTag = null;
+        for (const raw of sections['tags']) {
+          const line = raw.trim();
+          if (!line) continue;
+          if (line.startsWith('- ')) {
+            if (curTag) {
+              const p = line.slice(2).trim();
+              newPetTags[p] = newPetTags[p] || [];
+              if (!newPetTags[p].includes(curTag)) newPetTags[p].push(curTag);
+            }
+          } else {
+            const [name, color] = line.split('|').map(s => s.trim());
+            curTag = name;
+            newTagList.push({ name, color: color || '#6b7280' });
+          }
+        }
+      }
+
+      return { accounts: newAccounts, categoryList: newCategoryList, petCategories: newPetCategories, tagList: newTagList, petTags: newPetTags };
+    }
+
+    // ── Build save text ────────────────────────────────────────
+    function buildSaveText() {
+      // Accounts
+      const accLines = accounts.map(acc => {
+        const base = `${acc.name} | ${acc.color || defaultAccColor(accounts.indexOf(acc))}`;
+        const header = acc.label ? `${base} | ${acc.label}` : base;
+        return `${header}\n${acc.pets.map(p => `- ${p}`).join('\n')}`;
+      }).join('\n\n');
+
+      // Categories
+      const catBuckets = {};
+      categoryList.forEach(c => { catBuckets[c.name] = []; });
+      allPets().forEach(p => {
+        const cat = getCat(p);
+        if (cat && catBuckets[cat]) catBuckets[cat].push(p);
+      });
+      const catLines = categoryList.map(cat => {
+        const pets = catBuckets[cat.name];
+        return `${cat.name} | ${cat.color}${pets.length ? '\n' + pets.map(p => `- ${p}`).join('\n') : ''}`;
+      }).join('\n\n');
+
+      // Tags
+      const tagBuckets = {};
+      tagList.forEach(t => { tagBuckets[t.name] = []; });
+      allPets().forEach(p => {
+        (petTags[p] || []).forEach(t => {
+          if (tagBuckets[t]) tagBuckets[t].push(p);
+        });
+      });
+      const tagLines = tagList.map(tag => {
+        const pets = tagBuckets[tag.name];
+        return `${tag.name} | ${tag.color}${pets.length ? '\n' + pets.map(p => `- ${p}`).join('\n') : ''}`;
+      }).join('\n\n');
+
+      return `## Accounts\n\n${accLines}\n\n## Categories\n\n${catLines}${tagList.length ? '\n\n## Tags\n\n' + tagLines : ''}`;
+    }
+
+    // ── File I/O ───────────────────────────────────────────────
+    async function openFile() {
+      // Try File System Access API first (gives write-back handle)
+      if (window.showOpenFilePicker) {
+        try {
+          const [handle] = await window.showOpenFilePicker();
+          const file = await handle.getFile();
+          if (file.name.startsWith('ignore')) { toast('That file is ignored'); return; }
+          fileHandle = handle;
+          currentFileName = file.name;
+          applyParsed(parseFullFormat(await file.text()));
+          return;
+        } catch (e) {
+          if (e.name === 'AbortError') return;
+          // fall through to input fallback
+        }
+      }
+      document.getElementById('file-input').click();
+    }
+
+    async function handleFileInput(evt) {
+      const file = evt.target.files[0];
+      evt.target.value = '';
+      if (!file) return;
+      if (file.name.startsWith('ignore')) { toast('That file is ignored'); return; }
+      fileHandle = null; // no write-back without File System Access API
+      currentFileName = file.name;
+      applyParsed(parseFullFormat(await file.text()));
+    }
+
+    function applyParsed(parsed) {
+      accounts = parsed.accounts;
+      categoryList = parsed.categoryList;
+      petCategories = parsed.petCategories;
+      tagList = parsed.tagList;
+      petTags = parsed.petTags;
+      updateFileStatus();
+      render();
+    }
+
+    async function saveFile() {
+      if (fileHandle) {
+        const fname = currentFileName || 'the file';
+        const overwrite = confirm(`Overwrite "${fname}"?\n\nCancel to save as a new file instead.`);
+        if (overwrite) {
+          await autoSave();
+        } else {
+          await saveAs();
+        }
+        return;
+      }
+      await saveAs();
+    }
+
+    async function saveAs() {
+      if (window.showSaveFilePicker) {
+        try {
+          const h = await window.showSaveFilePicker({
+            suggestedName: currentFileName || 'pets.md',
+            types: [{ description: 'Markdown', accept: { 'text/plain': ['.md'] } }],
+          });
+          fileHandle = h;
+          currentFileName = (await h.getFile()).name;
+          updateFileStatus();
+          await autoSave();
+          return;
+        } catch (e) {
+          if (e.name === 'AbortError') return;
+        }
+      }
+      // Fallback: download
+      const blob = new Blob([buildSaveText()], { type: 'text/plain' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = currentFileName || 'pets.md';
+      a.click();
+      URL.revokeObjectURL(a.href);
+      toast('Downloaded as ' + a.download);
+    }
+
+    async function autoSave() {
+      if (!fileHandle) {
+        markUnsaved();
+        return;
+      }
+      try {
+        const w = await fileHandle.createWritable();
+        await w.write(buildSaveText());
+        await w.close();
+        flashSaved();
+      } catch (_) { }
+    }
+
+    function markUnsaved() {
+      const el = document.getElementById('save-indicator');
+      if (!el) return;
+      el.textContent = '● unsaved';
+      el.classList.remove('saved');
+      el.classList.add('unsaved');
+    }
+
+    function updateFileStatus() {
+      const el = document.getElementById('file-status');
+      if (!el) return;
+      el.textContent = currentFileName ? '📁 ' + currentFileName : '';
+      el.style.display = currentFileName ? '' : 'none';
+    }
+
+    function flashSaved() {
+      const el = document.getElementById('save-indicator');
+      if (!el) return;
+      el.textContent = '✓ saved';
+      el.classList.remove('unsaved');
+      el.classList.add('saved');
+      clearTimeout(flashSaved._t);
+      flashSaved._t = setTimeout(() => { el.classList.remove('saved'); el.textContent = ''; }, 1400);
+    }
+
+    // ── Import modal ───────────────────────────────────────────
+    function showImport() {
+      document.getElementById('import-modal').classList.add('open');
+      document.getElementById('import-textarea').focus();
+    }
+    function hideImport() {
+      document.getElementById('import-modal').classList.remove('open');
+      document.getElementById('lookup-preview').style.display = 'none';
+      document.getElementById('lookup-textarea').value = '';
+    }
+    function handleBackdropClick(e) {
+      if (e.target === document.getElementById('import-modal')) hideImport();
+    }
+    function showInstructions() {
+      document.getElementById('instructions-modal').classList.add('open');
+    }
+    function hideInstructions() {
+      document.getElementById('instructions-modal').classList.remove('open');
+    }
+    function handleInstructionsBackdrop(e) {
+      if (e.target === document.getElementById('instructions-modal')) hideInstructions();
+    }
+    function switchImportTab(tab) {
+      document.querySelectorAll('.itab-panel').forEach(p => p.style.display = 'none');
+      document.getElementById('itab-' + tab).style.display = '';
+      document.querySelectorAll('.import-tab').forEach(b =>
+        b.classList.toggle('active', b.dataset.itab === tab)
+      );
+    }
+
+    // ── Lookup parser ──────────────────────────────────────────
+    function parseLookupHtml(html) {
+      // Extract pet names from /petlookup.phtml?pet=NAME links
+      const pets = [];
+      const seen = new Set();
+      const re = /petlookup\.phtml\?pet=([^"&\s]+)/g;
+      let m;
+      while ((m = re.exec(html)) !== null) {
+        const name = decodeURIComponent(m[1]);
+        if (!seen.has(name)) { seen.add(name); pets.push(name); }
+      }
+      return pets;
+    }
+
+    function previewLookup() {
+      const html = document.getElementById('lookup-textarea').value;
+      const pets = parseLookupHtml(html);
+      const preview = document.getElementById('lookup-preview');
+      if (!pets.length) {
+        preview.textContent = 'No pets found — make sure you pasted the full page source.';
+        preview.style.display = 'block';
+        return;
+      }
+      preview.textContent = `Found ${pets.length} pet${pets.length > 1 ? 's' : ''}: ${pets.join(', ')}`;
+      preview.style.display = 'block';
+    }
+
+    function addFromLookup() {
+      const html = document.getElementById('lookup-textarea').value.trim();
+      const name = document.getElementById('lookup-account-name').value.trim();
+      if (!html) { toast('Paste some lookup HTML first'); return; }
+      if (!name) { toast('Enter an account name'); return; }
+      const pets = parseLookupHtml(html);
+      if (!pets.length) { toast('No pets found in that HTML'); return; }
+
+      const existing = accounts.find(a => a.name === name);
+      if (existing) {
+        // Merge: add pets not already present
+        const added = pets.filter(p => !existing.pets.includes(p));
+        existing.pets.push(...added);
+        toast(`Added ${added.length} pet${added.length !== 1 ? 's' : ''} to ${name}`);
+      } else {
+        accounts.push({ name, color: defaultAccColor(accounts.length), pets });
+        toast(`Created account "${name}" with ${pets.length} pets`);
+      }
+
+      document.getElementById('lookup-account-name').value = '';
+      document.getElementById('lookup-textarea').value = '';
+      document.getElementById('lookup-preview').style.display = 'none';
+      hideImport();
+      render();
+    }
+    function doImport() {
+      const text = document.getElementById('import-textarea').value.trim();
+      if (!text) { toast('Paste some data first'); return; }
+      const parsed = parseFullFormat(text);
+      if (!parsed.accounts.length) { toast('Could not parse — use account name lines then "- petname" lines'); return; }
+      applyParsed(parsed);
+      hideImport();
+    }
+    function startBlank() {
+      accounts = []; petCategories = {}; petTags = {};
+      hideImport();
+      render();
+    }
+
+    function render() {
+      autoSave();
+      if (currentTab === 'accounts') renderAccounts();
+      else if (currentTab === 'categories') renderCategories();
+      else renderMatrix();
+    }
+
+    // ================================================================
+    // ACCOUNTS TAB
+    // ================================================================
+    function renderAccounts() {
+      const board = document.getElementById('accounts-board');
+      board.innerHTML = '';
+
+      accounts.forEach((account, accIdx) => {
+        const accColor = account.color || defaultAccColor(accIdx);
+        const { el, list } = makeCol({
+          title: account.name, count: account.pets.length,
+          max: MAX_PETS, headerBg: accColor, extraClass: 'col-account',
+          onRecolor: () => recolorAccount(account.name),
+          label: account.label || '',
+          onRelabel: () => relabelAccount(account.name),
+        });
+        el.style.borderColor = accColor;
+        list.dataset.accIdx = accIdx;
+
+        if (account.pets.length === 0) {
+          list.appendChild(emptyHint('Drop pets here'));
+        } else {
+          account.pets.forEach((petName, petIdx) => {
+            const cat = getCat(petName);
+            const catMeta = getCatMeta(cat);
+            list.appendChild(makePetCard({
+              petName, petIdx,
+              badge: cat ? { label: cat, color: catMeta.color } : null,
+              onDragStart() { dragState = { context: 'account', petName, fromAccIdx: accIdx }; },
+            }));
+          });
+        }
+
+        setupBoardDropZone(list, el, (toList, y) => {
+          if (!dragState || dragState.context !== 'account') return;
+          const toAccIdx = parseInt(toList.dataset.accIdx);
+          const toAcc = accounts[toAccIdx];
+          const fromAcc = accounts[dragState.fromAccIdx];
+          if (toAccIdx !== dragState.fromAccIdx && toAcc.pets.length >= MAX_PETS) {
+            toast('Account is full (19 pets max)');
+            return;
+          }
+          const afterEl = getDragAfterElement(toList, y);
+          const afterPetName = afterEl ? afterEl.dataset.petName : null;
+          fromAcc.pets = fromAcc.pets.filter(p => p !== dragState.petName);
+          if (afterPetName) {
+            const idx = toAcc.pets.indexOf(afterPetName);
+            toAcc.pets.splice(idx < 0 ? toAcc.pets.length : idx, 0, dragState.petName);
+          } else {
+            toAcc.pets.push(dragState.petName);
+          }
+          dragState = null;
+          render();
+        }, 'account');
+
+        board.appendChild(el);
+      });
+    }
+
+    // ================================================================
+    // CATEGORIES TAB
+    // ================================================================
+    function renderCategories() {
+      renderLegend('cat-legend');
+      const board = document.getElementById('categories-board');
+      board.innerHTML = '';
+
+      [...categoryList, UNCATEGORIZED].forEach(cat => {
+        const isUncat = cat === UNCATEGORIZED;
+        const pets = allPets().filter(p => isUncat ? !getCat(p) : getCat(p) === cat.name);
+
+        const { el, list } = makeCol({
+          title: cat.name, count: pets.length,
+          max: null, headerBg: cat.color, extraClass: '',
+          onRename: isUncat ? null : () => renameCategory(cat.name),
+          onRecolor: isUncat ? null : () => recolorCategory(cat.name),
+        });
+        list.dataset.catName = isUncat ? '' : cat.name;
+
+        if (pets.length === 0) {
+          list.appendChild(emptyHint('Drop pets here'));
+        } else {
+          pets.forEach((petName, petIdx) => {
+            const accMeta = getPetAccount(petName);
+            list.appendChild(makePetCard({
+              petName, petIdx,
+              badge: accMeta ? { label: accMeta.name, color: '#4c1d95' } : null,
+              onDragStart() {
+                dragState = { context: 'category', petName, fromCatName: isUncat ? null : cat.name };
+              },
+            }));
+          });
+        }
+
+        setupBoardDropZone(list, el, (toList) => {
+          if (!dragState || dragState.context !== 'category') return;
+          const toCatName = toList.dataset.catName || null;
+          if (toCatName === dragState.fromCatName) { dragState = null; return; }
+          if (toCatName) petCategories[dragState.petName] = toCatName;
+          else delete petCategories[dragState.petName];
+          dragState = null;
+          render();
+        }, 'category');
+
+        // Category column reorder (drag the header)
+        if (!isUncat) {
+          const catName = cat.name;
+          el.dataset.catName = catName;
+          const header = el.querySelector('.col-header');
+          header.classList.add('cat-header');
+          header.draggable = true;
+          header.addEventListener('dragstart', (e) => {
+            dragState = { context: 'cat-reorder', fromCatName: catName };
+            e.dataTransfer.effectAllowed = 'move';
+            e.stopPropagation();
+          });
+          header.addEventListener('dragend', () => {
+            document.querySelectorAll('.col').forEach(c => c.classList.remove('col-reorder-over'));
+            dragState = null;
+          });
+          el.addEventListener('dragover', (e) => {
+            if (!dragState || dragState.context !== 'cat-reorder') return;
+            if (dragState.fromCatName === catName) return;
+            e.preventDefault();
+            el.classList.add('col-reorder-over');
+          });
+          el.addEventListener('dragleave', (e) => {
+            if (!el.contains(e.relatedTarget)) el.classList.remove('col-reorder-over');
+          });
+          el.addEventListener('drop', (e) => {
+            if (!dragState || dragState.context !== 'cat-reorder') return;
+            e.preventDefault();
+            el.classList.remove('col-reorder-over');
+            const fromIdx = categoryList.findIndex(c => c.name === dragState.fromCatName);
+            const toIdx = categoryList.findIndex(c => c.name === catName);
+            if (fromIdx >= 0 && toIdx >= 0 && fromIdx !== toIdx) {
+              const [moved] = categoryList.splice(fromIdx, 1);
+              categoryList.splice(toIdx, 0, moved);
+            }
+            dragState = null;
+            render();
+          });
+        }
+
+        board.appendChild(el);
+      });
+    }
+
+    // ================================================================
+    // MATRIX TAB
+    // ================================================================
+    function renderMatrix() {
+      renderLegend('matrix-legend');
+      const container = document.getElementById('matrix-container');
+      container.innerHTML = '';
+
+      const catCols = [...categoryList, UNCATEGORIZED];
+      const table = document.createElement('table');
+      table.className = 'matrix-table';
+
+      // Header row
+      const thead = document.createElement('thead');
+      const headerRow = document.createElement('tr');
+      const corner = document.createElement('th');
+      corner.textContent = '';
+      headerRow.appendChild(corner);
+
+      catCols.forEach(cat => {
+        const th = document.createElement('th');
+        const inner = document.createElement('div');
+        inner.className = 'mx-cat-header';
+        if (cat !== UNCATEGORIZED) {
+          inner.style.cursor = 'pointer';
+          inner.title = 'Click to filter';
+          inner.dataset.filterCat = cat.name;
+          inner.onclick = (e) => { if (!e.target.closest('button')) setMatrixFilter('cat', cat.name); };
+        }
+
+        const dotRow = document.createElement('div');
+        dotRow.style.cssText = 'display:flex;align-items:center;gap:5px;';
+        const dot = document.createElement('span');
+        dot.className = 'color-dot color-dot-btn';
+        dot.style.cssText = `background:${cat.color};width:11px;height:11px;`;
+        if (cat !== UNCATEGORIZED) {
+          dot.title = 'Change color';
+          dot.onclick = (e) => { e.stopPropagation(); recolorCategory(cat.name); };
+        }
+        dotRow.appendChild(dot);
+
+        const nameSpan = document.createElement('span');
+        nameSpan.textContent = cat.name;
+        dotRow.appendChild(nameSpan);
+
+        // Rename button (not for uncategorized)
+        if (cat !== UNCATEGORIZED) {
+          const renBtn = document.createElement('button');
+          renBtn.className = 'btn-icon';
+          renBtn.title = 'Rename';
+          renBtn.textContent = '✏';
+          renBtn.onclick = (e) => { e.stopPropagation(); renameCategory(cat.name); };
+          dotRow.appendChild(renBtn);
+        }
+
+        inner.appendChild(dotRow);
+        th.appendChild(inner);
+        headerRow.appendChild(th);
+      });
+
+      thead.appendChild(headerRow);
+      table.appendChild(thead);
+
+      // Body rows
+      const tbody = document.createElement('tbody');
+      accounts.forEach(account => {
+        const tr = document.createElement('tr');
+
+        const accTd = document.createElement('td');
+        const accInfo = document.createElement('div');
+        accInfo.className = 'mx-acc-info';
+        const accNameRow = document.createElement('div');
+        accNameRow.style.cssText = 'display:flex;align-items:center;gap:5px;';
+        const accDot = document.createElement('span');
+        accDot.className = 'color-dot color-dot-btn';
+        accDot.style.background = account.color || defaultAccColor(accounts.indexOf(account));
+        accDot.title = 'Change color';
+        accDot.onclick = () => recolorAccount(account.name);
+        const accName = document.createElement('span');
+        accName.textContent = account.name;
+        accNameRow.appendChild(accDot);
+        accNameRow.appendChild(accName);
+        const accCount = document.createElement('span');
+        accCount.className = 'mx-acc-count' + (account.pets.length >= MAX_PETS ? ' at-limit' : '');
+        accCount.textContent = `${account.pets.length}/${MAX_PETS}`;
+        accInfo.appendChild(accNameRow);
+        accInfo.appendChild(accCount);
+        if (account.label) {
+          const labelEl = document.createElement('span');
+          labelEl.className = 'acc-label';
+          labelEl.textContent = account.label;
+          labelEl.title = 'Click to edit label';
+          labelEl.onclick = () => relabelAccount(account.name);
+          accInfo.appendChild(labelEl);
+        } else {
+          const labelAdd = document.createElement('span');
+          labelAdd.className = 'acc-label-add';
+          labelAdd.textContent = '+ label';
+          labelAdd.onclick = () => relabelAccount(account.name);
+          accInfo.appendChild(labelAdd);
+        }
+        accTd.appendChild(accInfo);
+        tr.appendChild(accTd);
+
+        catCols.forEach(cat => {
+          const isUncat = cat === UNCATEGORIZED;
+          const toCatName = isUncat ? null : cat.name;
+          const pets = account.pets.filter(p => isUncat ? !getCat(p) : getCat(p) === cat.name);
+
+          const td = document.createElement('td');
+          const cell = document.createElement('div');
+          cell.className = 'matrix-cell';
+          cell.dataset.accName = account.name;
+          cell.dataset.catName = toCatName || '';
+
+          if (pets.length === 0) {
+            const empty = document.createElement('span');
+            empty.className = 'matrix-empty';
+            empty.textContent = '—';
+            cell.appendChild(empty);
+          } else {
+            pets.forEach(petName => {
+              cell.appendChild(makeMatrixPet(petName, account.name, toCatName, cat.color));
+            });
+          }
+
+          // Drop zone
+          cell.addEventListener('dragover', (e) => {
+            if (!dragState || dragState.context !== 'matrix') return;
+            e.preventDefault();
+            cell.classList.remove('mx-over', 'mx-full');
+            const toAcc = accounts.find(a => a.name === account.name);
+            const isSameAcc = account.name === dragState.fromAccName;
+            if (!isSameAcc && toAcc.pets.length >= MAX_PETS) {
+              cell.classList.add('mx-full');
+            } else {
+              cell.classList.add('mx-over');
+            }
+          });
+
+          cell.addEventListener('dragleave', (e) => {
+            if (!cell.contains(e.relatedTarget)) {
+              cell.classList.remove('mx-over', 'mx-full');
+            }
+          });
+
+          cell.addEventListener('drop', (e) => {
+            e.preventDefault();
+            cell.classList.remove('mx-over', 'mx-full');
+            if (!dragState || dragState.context !== 'matrix') return;
+
+            const toAccObj = accounts.find(a => a.name === account.name);
+            const fromAccObj = accounts.find(a => a.name === dragState.fromAccName);
+            const isSameAcc = account.name === dragState.fromAccName;
+            const isSameCat = toCatName === dragState.fromCatName;
+            if (isSameAcc && isSameCat) { dragState = null; return; }
+
+            if (!isSameAcc && toAccObj.pets.length >= MAX_PETS) {
+              toast('Account is full (19 pets max)');
+              dragState = null;
+              return;
+            }
+
+            // Move account
+            if (!isSameAcc) {
+              fromAccObj.pets = fromAccObj.pets.filter(p => p !== dragState.petName);
+              toAccObj.pets.push(dragState.petName);
+            }
+
+            // Update category
+            if (!isSameCat) {
+              if (toCatName) petCategories[dragState.petName] = toCatName;
+              else delete petCategories[dragState.petName];
+            }
+
+            dragState = null;
+            render();
+          });
+
+          td.appendChild(cell);
+          tr.appendChild(td);
+        });
+
+        tbody.appendChild(tr);
+      });
+
+      table.appendChild(tbody);
+      container.appendChild(table);
+      applyMatrixFilter();
+    }
+
+    function makeMatrixPet(petName, fromAccName, fromCatName, catColor) {
+      const mp = document.createElement('div');
+      mp.className = 'matrix-pet';
+      mp.draggable = true;
+      mp.dataset.petName = petName;
+      mp.style.borderLeftColor = catColor;
+
+      const imgWrap = document.createElement('div');
+      imgWrap.style.flexShrink = '0';
+      const img = document.createElement('img');
+      img.src = petImageUrl(petName);
+      img.alt = petName;
+      img.draggable = false;
+      img.onerror = function () {
+        const fb = document.createElement('div');
+        fb.className = 'img-fallback';
+        fb.textContent = petName.slice(0, 3);
+        imgWrap.replaceChild(fb, img);
+      };
+      imgWrap.appendChild(img);
+
+      const nm = document.createElement('div');
+      nm.className = 'pet-name';
+      nm.textContent = petName;
+
+      mp.appendChild(imgWrap);
+      mp.appendChild(nm);
+
+      mp.addEventListener('dragstart', (e) => {
+        // Defer so the drag image renders before we mark it translucent
+        requestAnimationFrame(() => mp.classList.add('dragging'));
+        dragState = { context: 'matrix', petName, fromAccName, fromCatName };
+        e.dataTransfer.effectAllowed = 'move';
+      });
+      mp.addEventListener('dragend', () => {
+        mp.classList.remove('dragging');
+        document.querySelectorAll('.matrix-cell').forEach(c => c.classList.remove('mx-over', 'mx-full'));
+        dragState = null;
+      });
+
+      mp.addEventListener('mouseenter', (e) => showMatrixTooltip(petName, e));
+      mp.addEventListener('mousemove', moveMatrixTooltip);
+      mp.addEventListener('mouseleave', hideMatrixTooltip);
+
+      return mp;
+    }
+
+    function showMatrixTooltip(petName, e) {
+      const tags = petTags[petName];
+      if (!tags || !tags.length) return;
+      const tt = document.getElementById('matrix-tooltip');
+      tt.innerHTML = tags.map(t => {
+        const meta = tagList.find(tl => tl.name === t);
+        const color = meta ? meta.color : '#888';
+        return `<span style="background:${color};color:${contrastColor(color)};border-radius:8px;padding:1px 6px;font-size:0.65rem;">${t}</span>`;
+      }).join('');
+      tt.classList.add('tt-show');
+      moveMatrixTooltip(e);
+    }
+
+    function moveMatrixTooltip(e) {
+      const tt = document.getElementById('matrix-tooltip');
+      if (!tt.classList.contains('tt-show')) return;
+      const x = e.clientX + 12, y = e.clientY + 12;
+      const r = tt.getBoundingClientRect();
+      tt.style.left = (x + r.width > window.innerWidth ? x - r.width - 20 : x) + 'px';
+      tt.style.top = (y + r.height > window.innerHeight ? y - r.height - 20 : y) + 'px';
+    }
+
+    function hideMatrixTooltip() {
+      document.getElementById('matrix-tooltip').classList.remove('tt-show');
+    }
+
+    // ================================================================
+    // MATRIX FILTER
+    // ================================================================
+    let matrixFilter = { cats: new Set(), tags: new Set(), mode: 'any' };
+
+    function isFilterActive() { return matrixFilter.cats.size > 0 || matrixFilter.tags.size > 0; }
+
+    function setMatrixFilter(type, name) {
+      const set = type === 'cat' ? matrixFilter.cats : matrixFilter.tags;
+      if (set.has(name)) set.delete(name); else set.add(name);
+      applyMatrixFilter();
+    }
+
+    function setFilterMode(mode) {
+      matrixFilter.mode = mode;
+      applyMatrixFilter();
+    }
+
+    function clearMatrixFilter() {
+      matrixFilter.cats.clear();
+      matrixFilter.tags.clear();
+      applyMatrixFilter();
+    }
+
+    function petMatchesFilter(petName) {
+      const { cats, tags, mode } = matrixFilter;
+      const petCat = getCat(petName) || null;
+      const pts = petTags[petName] || [];
+      if (mode === 'any') {
+        return (cats.size > 0 && cats.has(petCat)) || (tags.size > 0 && pts.some(t => tags.has(t)));
+      } else {
+        if (cats.size > 0 && !cats.has(petCat)) return false;
+        if (tags.size > 0 && ![...tags].every(t => pts.includes(t))) return false;
+        return true;
+      }
+    }
+
+    function applyMatrixFilter() {
+      const active = isFilterActive();
+
+      // Legend item highlights
+      document.querySelectorAll('#matrix-legend .legend-item.filterable').forEach(item => {
+        const set = item.dataset.filterType === 'cat' ? matrixFilter.cats : matrixFilter.tags;
+        item.classList.toggle('filter-active', set.has(item.dataset.filterName));
+      });
+      // Column header highlights
+      document.querySelectorAll('.mx-cat-header[data-filter-cat]').forEach(inner => {
+        inner.classList.toggle('filter-active-col', matrixFilter.cats.has(inner.dataset.filterCat));
+      });
+      // Filter bar visibility + mode buttons
+      const bar = document.getElementById('matrix-filter-bar');
+      if (bar) {
+        bar.style.display = active ? 'flex' : 'none';
+        bar.querySelector('#fmode-any').classList.toggle('fmode-active', matrixFilter.mode === 'any');
+        bar.querySelector('#fmode-all').classList.toggle('fmode-active', matrixFilter.mode === 'all');
+      }
+      // Pet fading
+      document.querySelectorAll('.matrix-pet').forEach(mp => {
+        if (!active) { mp.classList.remove('mx-faded', 'mx-highlighted'); return; }
+        const m = petMatchesFilter(mp.dataset.petName);
+        mp.classList.toggle('mx-faded', !m);
+        mp.classList.toggle('mx-highlighted', m);
+      });
+    }
+
+    // ================================================================
+    // LEGEND
+    // ================================================================
+    function renderLegend(id) {
+      const isMatrix = id === 'matrix-legend';
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.innerHTML = '';
+
+      if (isMatrix && categoryList.length) {
+        const lbl = document.createElement('span');
+        lbl.className = 'legend-section-label';
+        lbl.textContent = 'categories';
+        el.appendChild(lbl);
+      }
+
+      categoryList.forEach(cat => {
+        const item = document.createElement('div');
+        item.className = 'legend-item' + (isMatrix ? ' filterable' : '');
+        if (isMatrix) {
+          item.dataset.filterType = 'cat';
+          item.dataset.filterName = cat.name;
+          item.onclick = () => setMatrixFilter('cat', cat.name);
+        }
+        const dot = document.createElement('span');
+        dot.className = 'color-dot color-dot-btn';
+        dot.style.background = cat.color;
+        dot.title = 'Change color';
+        dot.onclick = (e) => { e.stopPropagation(); recolorCategory(cat.name); };
+        const name = document.createElement('span');
+        name.textContent = cat.name;
+        item.appendChild(dot);
+        item.appendChild(name);
+        if (!isMatrix) {
+          const renBtn = document.createElement('button');
+          renBtn.className = 'btn-icon';
+          renBtn.title = 'Rename';
+          renBtn.textContent = '✏';
+          renBtn.onclick = () => renameCategory(cat.name);
+          item.appendChild(renBtn);
+          const delBtn = document.createElement('button');
+          delBtn.className = 'btn-icon';
+          delBtn.title = 'Delete category';
+          delBtn.innerHTML = TRASH_SVG;
+          delBtn.onclick = () => deleteCategory(cat.name);
+          item.appendChild(delBtn);
+        }
+        el.appendChild(item);
+      });
+
+      if (isMatrix && tagList.length) {
+        const div = document.createElement('div');
+        div.className = 'legend-divider';
+        el.appendChild(div);
+        const lbl = document.createElement('span');
+        lbl.className = 'legend-section-label';
+        lbl.textContent = 'tags';
+        el.appendChild(lbl);
+        tagList.forEach(tag => {
+          const item = document.createElement('div');
+          item.className = 'legend-item filterable';
+          item.dataset.filterType = 'tag';
+          item.dataset.filterName = tag.name;
+          item.onclick = () => setMatrixFilter('tag', tag.name);
+          const dot = document.createElement('span');
+          dot.className = 'color-dot color-dot-btn';
+          dot.style.background = tag.color;
+          dot.title = 'Change color';
+          dot.onclick = (e) => { e.stopPropagation(); recolorTag(tag.name); };
+          const name = document.createElement('span');
+          name.textContent = tag.name;
+          const delBtn = document.createElement('button');
+          delBtn.className = 'btn-icon';
+          delBtn.title = 'Delete tag';
+          delBtn.innerHTML = TRASH_SVG;
+          delBtn.onclick = (e) => { e.stopPropagation(); deleteTag(tag.name); };
+          item.appendChild(dot);
+          item.appendChild(name);
+          item.appendChild(delBtn);
+          el.appendChild(item);
+        });
+      }
+    }
+
+    // ================================================================
+    // SHARED BUILDERS
+    // ================================================================
+    function makeCol({ title, count, max, headerBg, extraClass, onRename, onRecolor, label, onRelabel }) {
+      const col = document.createElement('div');
+      col.className = `col${extraClass ? ' ' + extraClass : ''}`;
+      if (max !== null && count >= max) col.classList.add('full');
+
+      const header = document.createElement('div');
+      header.className = 'col-header';
+      header.style.background = headerBg;
+      header.style.color = contrastColor(headerBg);
+      header.style.flexDirection = 'column';
+      header.style.alignItems = 'stretch';
+
+      const topRow = document.createElement('div');
+      topRow.style.cssText = 'display:flex;justify-content:space-between;align-items:center;gap:4px;';
+
+      const titleWrap = document.createElement('div');
+      titleWrap.style.cssText = 'display:flex;align-items:center;gap:5px;flex:1;min-width:0;';
+
+      if (onRecolor) {
+        const dot = document.createElement('span');
+        dot.className = 'color-dot color-dot-btn';
+        dot.style.cssText = `background:${headerBg};flex-shrink:0;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,0.55),0 0 0 1px rgba(0,0,0,0.25);`;
+        dot.title = 'Change color';
+        dot.onclick = (e) => { e.stopPropagation(); onRecolor(); };
+        titleWrap.appendChild(dot);
+      }
+
+      const titleEl = document.createElement('span');
+      titleEl.className = 'col-header-title';
+      titleEl.textContent = title;
+      titleWrap.appendChild(titleEl);
+
+      const actions = document.createElement('div');
+      actions.className = 'col-header-actions';
+
+      if (onRename) {
+        const renBtn = document.createElement('button');
+        renBtn.className = 'btn-icon';
+        renBtn.title = 'Rename';
+        renBtn.textContent = '✏';
+        renBtn.onclick = onRename;
+        actions.appendChild(renBtn);
+      }
+
+      const badge = document.createElement('span');
+      badge.className = 'count-badge' + (max !== null && count >= max ? ' at-limit' : '');
+      badge.textContent = max !== null ? `${count}/${max}` : count;
+      actions.appendChild(badge);
+
+      topRow.appendChild(titleWrap);
+      topRow.appendChild(actions);
+      header.appendChild(topRow);
+
+      if (onRelabel !== undefined) {
+        const labelEl = document.createElement('span');
+        if (label) {
+          labelEl.className = 'acc-label';
+          labelEl.textContent = label;
+          labelEl.title = 'Click to edit label';
+        } else {
+          labelEl.className = 'acc-label-add';
+          labelEl.textContent = '+ add label';
+        }
+        labelEl.onclick = (e) => { e.stopPropagation(); onRelabel(); };
+        header.appendChild(labelEl);
+      }
+
+      col.appendChild(header);
+
+      const list = document.createElement('div');
+      list.className = 'pet-list';
+      col.appendChild(list);
+
+      return { el: col, list };
+    }
+
+    function makePetCard({ petName, petIdx, badge, onDragStart }) {
+      const card = document.createElement('div');
+      card.className = 'pet-card';
+      card.draggable = true;
+      card.title = 'Right-click to add/edit tags';
+      card.dataset.petName = petName;
+      card.dataset.petIdx = petIdx;
+
+      const catMeta = getCatMeta(getCat(petName));
+      card.style.borderLeftColor = catMeta.color;
+
+      const imgWrap = document.createElement('div');
+      imgWrap.style.flexShrink = '0';
+      const img = document.createElement('img');
+      img.src = petImageUrl(petName);
+      img.alt = petName;
+      img.draggable = false;
+      img.onerror = function () {
+        const fb = document.createElement('div');
+        fb.className = 'img-fallback';
+        fb.textContent = petName.slice(0, 4);
+        imgWrap.replaceChild(fb, img);
+      };
+      imgWrap.appendChild(img);
+
+      const info = document.createElement('div');
+      info.className = 'pet-info';
+      const nameEl = document.createElement('div');
+      nameEl.className = 'pet-name';
+      nameEl.textContent = petName;
+      info.appendChild(nameEl);
+
+      if (badge) {
+        const b = document.createElement('span');
+        b.className = 'pet-badge';
+        b.style.background = badge.color;
+        b.style.color = contrastColor(badge.color);
+        b.textContent = badge.label;
+        info.appendChild(b);
+      }
+
+      // Tag chips
+      const tags = petTags[petName];
+      if (tags && tags.length) {
+        const tagRow = document.createElement('div');
+        tagRow.className = 'pet-tags';
+        tags.forEach(t => {
+          const meta = tagList.find(tl => tl.name === t);
+          const chip = document.createElement('span');
+          chip.className = 'tag-chip';
+          const chipColor = meta ? meta.color : '#6b7280';
+          chip.style.background = chipColor;
+          chip.style.color = contrastColor(chipColor);
+          chip.textContent = t;
+          tagRow.appendChild(chip);
+        });
+        info.appendChild(tagRow);
+      }
+
+      card.appendChild(imgWrap);
+      card.appendChild(info);
+
+      card.addEventListener('dragstart', (e) => {
+        onDragStart();
+        card.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+      });
+      card.addEventListener('dragend', () => {
+        card.classList.remove('dragging');
+        document.querySelectorAll('.drop-indicator').forEach(el => el.remove());
+        document.querySelectorAll('.col').forEach(el => el.classList.remove('over'));
+        dragState = null;
+      });
+
+      // Right-click or long-press → tag popover
+      card.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+        openTagPopover(petName, e.clientX, e.clientY);
+      });
+
+      return card;
+    }
+
+    // ================================================================
+    // TAG POPOVER
+    // ================================================================
+    let tagPopoverPet = null;
+
+    function openTagPopover(petName, x, y) {
+      tagPopoverPet = petName;
+      const pop = document.getElementById('tag-popover');
+      pop.innerHTML = '';
+
+      const title = document.createElement('h3');
+      title.textContent = petName;
+      pop.appendChild(title);
+
+      // Tag checkboxes
+      if (tagList.length) {
+        const list = document.createElement('div');
+        list.className = 'tag-popover-list';
+        tagList.forEach(tag => {
+          const row = document.createElement('label');
+          row.className = 'tag-toggle';
+          const cb = document.createElement('input');
+          cb.type = 'checkbox';
+          cb.checked = (petTags[petName] || []).includes(tag.name);
+          cb.onchange = () => {
+            if (!petTags[petName]) petTags[petName] = [];
+            if (cb.checked) {
+              if (!petTags[petName].includes(tag.name)) petTags[petName].push(tag.name);
+            } else {
+              petTags[petName] = petTags[petName].filter(t => t !== tag.name);
+              if (!petTags[petName].length) delete petTags[petName];
+            }
+            render();
+            // Re-open popover so checkboxes refresh without closing
+            openTagPopover(petName, pop._x, pop._y);
+          };
+          const dot = document.createElement('span');
+          dot.className = 'tag-toggle-dot';
+          dot.style.background = tag.color;
+          dot.title = 'Change color';
+          dot.onclick = (e) => { e.preventDefault(); e.stopPropagation(); recolorTag(tag.name); };
+          const lbl = document.createElement('span');
+          lbl.style.flex = '1';
+          lbl.textContent = tag.name;
+          const delBtn = document.createElement('button');
+          delBtn.className = 'btn-icon';
+          delBtn.title = 'Delete tag globally';
+          delBtn.innerHTML = TRASH_SVG;
+          delBtn.onclick = (e) => { e.preventDefault(); e.stopPropagation(); deleteTag(tag.name); };
+          row.appendChild(cb); row.appendChild(dot); row.appendChild(lbl); row.appendChild(delBtn);
+          list.appendChild(row);
+        });
+        pop.appendChild(list);
+      }
+
+      // New tag input
+      const newRow = document.createElement('div');
+      newRow.className = 'tag-popover-new';
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.placeholder = 'new tag…';
+      const addBtn = document.createElement('button');
+      addBtn.textContent = '+';
+      addBtn.onclick = () => {
+        const name = input.value.trim();
+        if (!name) return;
+        if (!tagList.find(t => t.name === name)) {
+          const palette = ['#e11d48', '#f97316', '#84cc16', '#06b6d4', '#6366f1', '#d946ef', '#0ea5e9', '#f43f5e'];
+          tagList.push({ name, color: palette[tagList.length % palette.length] });
+        }
+        if (!petTags[petName]) petTags[petName] = [];
+        if (!petTags[petName].includes(name)) petTags[petName].push(name);
+        render();
+        openTagPopover(petName, pop._x, pop._y);
+      };
+      input.onkeydown = (e) => { if (e.key === 'Enter') addBtn.onclick(); };
+      newRow.appendChild(input); newRow.appendChild(addBtn);
+      pop.appendChild(newRow);
+
+      // Position
+      pop.style.display = 'block';
+      pop._x = x; pop._y = y;
+      const rect = pop.getBoundingClientRect();
+      const vw = window.innerWidth, vh = window.innerHeight;
+      pop.style.left = (x + rect.width > vw ? vw - rect.width - 8 : x) + 'px';
+      pop.style.top = (y + rect.height > vh ? vh - rect.height - 8 : y) + 'px';
+    }
+
+    function closeTagPopover() {
+      document.getElementById('tag-popover').style.display = 'none';
+      tagPopoverPet = null;
+    }
+
+    document.addEventListener('click', (e) => {
+      const pop = document.getElementById('tag-popover');
+      if (pop && !pop.contains(e.target)) closeTagPopover();
+    });
+
+    function setupBoardDropZone(list, col, onDrop, expectedContext) {
+      list.addEventListener('dragover', (e) => {
+        if (!dragState || (expectedContext && dragState.context !== expectedContext)) return;
+        e.preventDefault();
+        col.classList.add('over');
+        list.querySelectorAll('.drop-indicator').forEach(el => el.remove());
+        const afterEl = getDragAfterElement(list, e.clientY);
+        const ind = document.createElement('div');
+        ind.className = 'drop-indicator visible';
+        afterEl ? list.insertBefore(ind, afterEl) : list.appendChild(ind);
+      });
+      list.addEventListener('dragleave', (e) => {
+        if (!list.contains(e.relatedTarget)) {
+          col.classList.remove('over');
+          list.querySelectorAll('.drop-indicator').forEach(el => el.remove());
+        }
+      });
+      list.addEventListener('drop', (e) => {
+        e.preventDefault();
+        col.classList.remove('over');
+        list.querySelectorAll('.drop-indicator').forEach(el => el.remove());
+        onDrop(list, e.clientY);
+      });
+    }
+
+    function emptyHint(text) {
+      const d = document.createElement('div');
+      d.className = 'empty-col';
+      d.textContent = text;
+      return d;
+    }
+
+    // ================================================================
+    // RECOLOR / RENAME
+    // ================================================================
+    function pickColor(current, onPick) {
+      const inp = document.createElement('input');
+      inp.type = 'color';
+      inp.value = current;
+      Object.assign(inp.style, { position: 'fixed', opacity: '0', pointerEvents: 'none', top: '0', left: '0' });
+      document.body.appendChild(inp);
+      inp.oninput = () => onPick(inp.value, false);
+      inp.onchange = () => { onPick(inp.value, true); document.body.removeChild(inp); };
+      inp.addEventListener('cancel', () => document.body.removeChild(inp));
+      inp.click();
+    }
+
+    function recolorCategory(name) {
+      const cat = categoryList.find(c => c.name === name);
+      if (!cat) return;
+      pickColor(cat.color, (color, done) => {
+        cat.color = color;
+        render();
+      });
+    }
+
+    function recolorTag(name) {
+      const tag = tagList.find(t => t.name === name);
+      if (!tag) return;
+      pickColor(tag.color, (color, done) => {
+        tag.color = color;
+        render();
+      });
+    }
+
+    function recolorAccount(name) {
+      const acc = accounts.find(a => a.name === name);
+      if (!acc) return;
+      pickColor(acc.color || defaultAccColor(accounts.indexOf(acc)), (color, done) => {
+        acc.color = color;
+        render();
+      });
+    }
+
+    function relabelAccount(name) {
+      const acc = accounts.find(a => a.name === name);
+      if (!acc) return;
+      const current = acc.label || '';
+      const input = prompt(`Label for "${name}":`, current);
+      if (input === null) return;
+      acc.label = input.trim();
+      render();
+      autoSave();
+    }
+
+    function deleteCategory(name) {
+      if (!confirm(`Delete category "${name}"?\n\nPets in it will become uncategorized.`)) return;
+      categoryList = categoryList.filter(c => c.name !== name);
+      for (const pet of Object.keys(petCategories)) {
+        if (petCategories[pet] === name) delete petCategories[pet];
+      }
+      matrixFilter.cats.delete(name);
+      render();
+    }
+
+    function deleteTag(name) {
+      if (!confirm(`Delete tag "${name}"?\n\nIt will be removed from all pets.`)) return;
+      tagList = tagList.filter(t => t.name !== name);
+      for (const pet of Object.keys(petTags)) {
+        petTags[pet] = petTags[pet].filter(t => t !== name);
+        if (!petTags[pet].length) delete petTags[pet];
+      }
+      matrixFilter.tags.delete(name);
+      render();
+    }
+
+    function renameCategory(oldName) {
+      const newName = prompt(`Rename "${oldName}":`, oldName);
+      if (!newName || !newName.trim() || newName.trim() === oldName) return;
+      const trimmed = newName.trim();
+      if (categoryList.some(c => c.name === trimmed)) {
+        toast('A category with that name already exists');
+        return;
+      }
+      const cat = categoryList.find(c => c.name === oldName);
+      if (cat) cat.name = trimmed;
+      for (const pet of Object.keys(petCategories)) {
+        if (petCategories[pet] === oldName) petCategories[pet] = trimmed;
+      }
+      render();
+    }
+
+    // ================================================================
+    // ADD ACCOUNT / CATEGORY
+    // ================================================================
+    function addAccount() {
+      const name = prompt('Account name:');
+      if (name && name.trim()) {
+        accounts.push({ name: name.trim(), color: defaultAccColor(accounts.length), pets: [] });
+        render();
+      }
+    }
+
+    function addCategory() {
+      const name = prompt('Category name:');
+      if (!name || !name.trim()) return;
+      const palette = ['#e11d48', '#f97316', '#84cc16', '#06b6d4', '#6366f1', '#d946ef', '#0ea5e9', '#a3e635'];
+      const def = palette[categoryList.length % palette.length];
+      const color = prompt(`Color hex for "${name.trim()}":`, def) || def;
+      categoryList.push({ name: name.trim(), color: color.trim() });
+      render();
+    }
+
+    // ================================================================
+    // EXPORT
+    // ================================================================
+    function buildExportText() {
+      const accountsSection = accounts.map(acc =>
+        `${acc.name}\n${acc.pets.map(p => `- ${p}`).join('\n')}`
+      ).join('\n\n');
+
+      const catBuckets = {};
+      categoryList.forEach(c => { catBuckets[c.name] = []; });
+      allPets().forEach(p => {
+        const cat = getCat(p);
+        if (cat && catBuckets[cat]) catBuckets[cat].push(p);
+      });
+      const categoriesSection = categoryList.map(cat => {
+        const pets = catBuckets[cat.name];
+        return `${cat.name}${pets.length ? '\n' + pets.map(p => `- ${p}`).join('\n') : ''}`;
+      }).join('\n\n');
+
+      return `## Accounts\n\n${accountsSection}\n\n## Categories\n\n${categoriesSection}`;
+    }
+
+    function exportMarkdown() {
+      const out = document.getElementById('export-output');
+      const btn = document.getElementById('export-btn');
+      if (out.style.display === 'block') {
+        out.style.display = 'none';
+        btn.textContent = 'Export';
+      } else {
+        out.textContent = buildExportText();
+        out.style.display = 'block';
+        btn.textContent = 'Hide Export';
+      }
+    }
+
+    function copyExport() {
+      navigator.clipboard.writeText(buildExportText()).then(() => toast('Copied to clipboard!'));
+    }
+
+    // ================================================================
+    // THEME
+    // ================================================================
+    function setTheme(name) {
+      if (name === 'default') {
+        document.body.removeAttribute('data-theme');
+      } else {
+        document.body.dataset.theme = name;
+      }
+      localStorage.setItem('neo-theme', name);
+    }
+
+    // ================================================================
+    // INIT
+    // ================================================================
+    (function initTheme() {
+      const saved = localStorage.getItem('neo-theme') || 'default';
+      setTheme(saved);
+      const sel = document.getElementById('theme-select');
+      if (sel) sel.value = saved;
+    })();
+    render();
+  </script>
+</body>
+
+</html>
