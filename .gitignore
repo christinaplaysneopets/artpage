@@ -7,5 +7,7 @@ filestructure.md
 *.claude
 *.vscode
 *.html
+!index.html
 *.txt
 *.md
+everythingpage/scripts/*
