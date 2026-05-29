@@ -9,6 +9,6 @@ filestructure.md
 *.html
 !index.html
 !testpetorganizer.html
-*.txt
 *.md
 everythingpage/scripts/*
+*.txt
